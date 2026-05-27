@@ -3,33 +3,30 @@
 import { useId } from 'react';
 
 /*  ──────────────────────────────────────────────────────────────────
-    EntrenaConIA — brand mark
+    EntrenaConIA — brand mark  (NOVA mascot)
 
-    Concept: ECG / heartbeat line — universal symbol of life, health
-    and human warmth. The pulse flows through a gradient purple→cyan.
+    Concept: friendly mascot character in Duolingo spirit —
+    round face, big expressive eyes, ear bumps on top, warm smile.
+    Gradient purple→cyan flows diagonally (bottom-left → top-right)
+    across the face, giving a premium glowing look.
 
-    Design rationale
-    ─────────────────
-    ● ECG line = heartbeat = life = closeness to the person
-    ● Gradient flows left→right as the pulse travels (purple → cyan)
-    ● Single continuous stroke = simplicity, confidence
-    ● Round caps & joins = friendly, human, not corporate
-    ● Pulsing dot at end = AI "alive and listening"
-    ● Dark container (#0c0c14) = premium, high-contrast
+    Design anatomy (100×100 viewBox)
+    ─────────────────────────────────
+    Face circle:   cx=50  cy=58  r=35   (top edge ≈ y=23)
+    Left ear:      cx=28  cy=18  r=10   (overlaps face top by ~5px)
+    Right ear:     cx=72  cy=18  r=10
 
-    Path anatomy (100×100 viewBox)
-    ────────────────────────────────
-    Baseline: y = 50 (horizontal centre)
-    Left flat:    M 10,50 → L 28,50
-    QRS peak:     L 38,20          (30px above baseline — R wave)
-    QRS trough:   L 46,74          (24px below baseline — S wave)
-    Return:       L 56,50
-    T-wave flat:  L 64,50
-    T-wave peak:  L 69,37 L 74,50  (13px above baseline)
-    Right flat:   L 90,50
+    Left eye iris: cx=37  cy=51  r=11.5
+    Left pupil:    cx=39  cy=53  r=5.5
+    Left shine:    cx=43  cy=48  r=3
 
-    Gradient spans x=10→90 in userSpace, so the line starts purple
-    and ends cyan as the pulse travels right.
+    Right eye iris: cx=63  cy=51  r=11.5
+    Right pupil:    cx=65  cy=53  r=5.5
+    Right shine:    cx=69  cy=48  r=3
+
+    Smile: M 37 68 Q 50 80 63 68  (open arc, strokeWidth 3.5)
+
+    Animation: eyes blink every 3.8 s (staggered 70 ms)
     ────────────────────────────────────────────────────────────────── */
 
 export interface AILogoProps {
@@ -52,8 +49,8 @@ export function AILogo({
     grad: `ecg${u}`,
     hl:   `ech${u}`,
     gf:   `ecs${u}`,
-    line: `ecl${u}`,
-    dot:  `ecd${u}`,
+    el:   `ecel${u}`,
+    er:   `ecer${u}`,
   };
 
   return (
@@ -67,42 +64,41 @@ export function AILogo({
       style={{ flexShrink: 0, display: 'block' }}
       aria-label="EntrenaConIA"
     >
-      {/* ── Heartbeat animation ── */}
+      {/* ── Blink animation ── */}
       {animated && (
         <style>{`
-          @keyframes hb${u}{
-            0%,100%{ opacity:1 }
-            12%    { opacity:0.55 }
-            28%    { opacity:1 }
+          @keyframes blink${u}{
+            0%,84%,100%{ transform:scaleY(1)    }
+            89%        { transform:scaleY(0.07) }
+            93%        { transform:scaleY(1)    }
           }
-          @keyframes hbdot${u}{
-            0%,100%{ r:3.5; opacity:1 }
-            12%    { r:6;   opacity:0.55 }
-            28%    { r:3.5; opacity:1 }
+          #${ids.el},#${ids.er}{
+            transform-box:fill-box;
+            transform-origin:center center;
+            animation:blink${u} 3.8s ease-in-out infinite;
           }
-          #${ids.line}{ animation:hb${u} 1.3s ease-out infinite }
-          #${ids.dot} { animation:hbdot${u} 1.3s ease-out infinite }
+          #${ids.er}{ animation-delay:.07s }
         `}</style>
       )}
 
       <defs>
-        {/* Horizontal gradient spanning the whole pulse path */}
+        {/* Diagonal gradient bottom-left purple → top-right cyan */}
         <linearGradient
           id={ids.grad}
-          x1="10" y1="0" x2="90" y2="0"
+          x1="10" y1="90" x2="90" y2="10"
           gradientUnits="userSpaceOnUse"
         >
           <stop offset="0%"   stopColor="#6c5ce7"/>
           <stop offset="100%" stopColor="#00d2ff"/>
         </linearGradient>
 
-        {/* Top-left glass sheen */}
+        {/* Glass sheen */}
         <radialGradient id={ids.hl} cx="30%" cy="22%" r="55%">
           <stop offset="0%"   stopColor="white" stopOpacity="0.13"/>
           <stop offset="100%" stopColor="white" stopOpacity="0"/>
         </radialGradient>
 
-        {/* Outer glow filter */}
+        {/* Outer glow */}
         {showGlow && (
           <filter id={ids.gf} x="-45%" y="-45%" width="190%" height="190%">
             <feGaussianBlur stdDeviation="7" result="b"/>
@@ -124,31 +120,43 @@ export function AILogo({
         />
       )}
 
-      {/* ── Container: near-black rounded square ── */}
+      {/* ── Container ── */}
       <rect x="0" y="0" width="100" height="100" rx="20" fill="#0c0c14"/>
-      {/* Glass sheen */}
       <rect x="0" y="0" width="100" height="100" rx="20" fill={`url(#${ids.hl})`}/>
-      {/* Subtle inner edge */}
       <rect
         x="0.75" y="0.75" width="98.5" height="98.5" rx="19.5"
         stroke="white" strokeOpacity="0.06" strokeWidth="1.5" fill="none"
       />
 
-      {/* ── ECG / heartbeat line ── */}
-      <path
-        id={ids.line}
-        d="M 10 50 L 28 50 L 38 20 L 46 74 L 56 50 L 64 50 L 69 37 L 74 50 L 90 50"
-        stroke={`url(#${ids.grad})`}
-        strokeWidth="4.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      {/* ── Ears (drawn before face so face overlaps the base) ── */}
+      <circle cx="28" cy="18" r="10" fill={`url(#${ids.grad})`}/>
+      <circle cx="72" cy="18" r="10" fill={`url(#${ids.grad})`}/>
+      {/* Inner ear highlight */}
+      <circle cx="28" cy="15" r="4.5" fill="white" fillOpacity="0.18"/>
+      <circle cx="72" cy="15" r="4.5" fill="white" fillOpacity="0.18"/>
 
-      {/* ── Pulsing dot — AI alive at the end of the line ── */}
-      <circle
-        id={ids.dot}
-        cx="90" cy="50" r="3.5"
-        fill="#00d2ff"
+      {/* ── Face ── */}
+      <circle cx="50" cy="58" r="35" fill={`url(#${ids.grad})`}/>
+
+      {/* ── Left eye ── */}
+      <g id={ids.el}>
+        <circle cx="37" cy="51" r="11.5" fill="white"/>
+        <circle cx="39" cy="53" r="5.5"  fill="#0c0c14"/>
+        <circle cx="43" cy="48" r="3"    fill="white"/>
+      </g>
+
+      {/* ── Right eye ── */}
+      <g id={ids.er}>
+        <circle cx="63" cy="51" r="11.5" fill="white"/>
+        <circle cx="65" cy="53" r="5.5"  fill="#0c0c14"/>
+        <circle cx="69" cy="48" r="3"    fill="white"/>
+      </g>
+
+      {/* ── Smile ── */}
+      <path
+        d="M 37 68 Q 50 81 63 68"
+        stroke="white" strokeWidth="3.5"
+        fill="none" strokeLinecap="round"
       />
     </svg>
   );
