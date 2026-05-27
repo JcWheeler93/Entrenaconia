@@ -3,17 +3,17 @@
 import { useId } from 'react';
 
 /*  ──────────────────────────────────────────────────────────────
-    EntrenaConIA  —  brand mark & wordmark
+    EntrenaConIA — brand mark
 
-    Design concept:
-    ● Bold italic "E" lettermark (E = Entrena, italicised = forward motion)
-    ● Three bars + stem — also reads as "signal strength" / AI data bars
-    ● Gradient-filled rounded-square container (#6c5ce7 → #00d2ff)
-    ● Small lightning-bolt spark in the top-right corner space
-    ● Depth: inner radial highlight on bg + subtle drop-shadow ring
+    Design: geometric sprinter figure in full stride
+    ● Head (circle) + torso (forward lean ~30°) + 4 limbs
+    ● Bold rounded strokes — athletic, confident
+    ● Gradient rounded-square container  #6c5ce7 → #00d2ff
+    ● Glass highlight layer for premium depth
+    ● Animated: subtle breathing pulse on the figure
 
-    Inspired by: Strava, Peloton, Apple Fitness+ — clean app-icon logic.
-    Works at 16 px favicon → 256 px header.
+    Reference: Strava / RunKeeper style but fully custom geometry.
+    Works at 16 px favicon → 256 px display.
     ────────────────────────────────────────────────────────────── */
 
 export interface AILogoProps {
@@ -33,10 +33,10 @@ export function AILogo({
   const u = raw.replace(/[^a-z0-9]/gi, '');
 
   const G = {
-    bg:    `ecbg${u}`,
-    hl:    `echl${u}`,
-    sh:    `ecsh${u}`,
-    anim:  `ecam${u}`,
+    bg:   `ecbg${u}`,
+    hl:   `echl${u}`,
+    sh:   `ecsh${u}`,
+    fig:  `ecfg${u}`,
   };
 
   return (
@@ -50,93 +50,107 @@ export function AILogo({
       style={{ flexShrink: 0, display: 'block' }}
       aria-label="EntrenaConIA"
     >
-      {/* ── Optional shimmer animation ── */}
+      {/* ── Keyframes (only when animated) ── */}
       {animated && (
         <style>{`
-          @keyframes ecsh${u} {
-            0%   { stop-color: #6c5ce7 }
-            50%  { stop-color: #8b5cf6 }
-            100% { stop-color: #6c5ce7 }
+          @keyframes ecpulse${u} {
+            0%,100% { transform:scale(1); }
+            50%      { transform:scale(.95); }
           }
-          @keyframes ecsh2${u} {
-            0%   { stop-color: #00d2ff }
-            50%  { stop-color: #06b6d4 }
-            100% { stop-color: #00d2ff }
+          #${G.fig} {
+            animation: ecpulse${u} 1.9s ease-in-out infinite;
+            transform-origin: 50px 52px;
+            transform-box: fill-box;
           }
-          #${G.anim}-s1 { animation: ecsh${u} 3s ease-in-out infinite }
-          #${G.anim}-s2 { animation: ecsh2${u} 3s ease-in-out infinite 1.5s }
         `}</style>
       )}
 
       <defs>
-        {/* Main gradient — diagonal purple → cyan */}
-        <linearGradient id={G.bg} x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-          <stop id={`${G.anim}-s1`} offset="0%"   stopColor="#6c5ce7"/>
-          <stop id={`${G.anim}-s2`} offset="100%" stopColor="#00d2ff"/>
+        {/* Main brand gradient */}
+        <linearGradient id={G.bg} x1="4" y1="4" x2="96" y2="96" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stopColor="#6c5ce7"/>
+          <stop offset="100%" stopColor="#00d2ff"/>
         </linearGradient>
 
-        {/* Top-left highlight for depth / glass feel */}
-        <radialGradient id={G.hl} cx="28%" cy="22%" r="58%">
-          <stop offset="0%"   stopColor="white" stopOpacity="0.28"/>
+        {/* Top-left glass highlight */}
+        <radialGradient id={G.hl} cx="26%" cy="20%" r="54%">
+          <stop offset="0%"   stopColor="white" stopOpacity="0.26"/>
           <stop offset="100%" stopColor="white" stopOpacity="0"/>
         </radialGradient>
 
-        {/* Outer glow shadow (optional) */}
+        {/* Outer glow filter (only when showGlow) */}
         {showGlow && (
           <filter id={G.sh} x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur stdDeviation="6" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            <feGaussianBlur stdDeviation="7" result="b"/>
+            <feMerge>
+              <feMergeNode in="b"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
           </filter>
         )}
       </defs>
 
-      {/* ── Outer glow halo ── */}
+      {/* Outer halo */}
       {showGlow && (
-        <rect
-          x="2" y="2" width="96" height="96" rx="24"
-          fill={`url(#${G.bg})`}
-          opacity="0.35"
-          filter={`url(#${G.sh})`}
-        />
+        <rect x="-2" y="-2" width="104" height="104" rx="24"
+          fill={`url(#${G.bg})`} opacity="0.28"
+          filter={`url(#${G.sh})`}/>
       )}
 
-      {/* ── Background rounded square ── */}
-      <rect x="0" y="0" width="100" height="100" rx="22" fill={`url(#${G.bg})`}/>
+      {/* ── Background: gradient rounded square ── */}
+      <rect x="0" y="0" width="100" height="100" rx="21" fill={`url(#${G.bg})`}/>
+      {/* Glass depth highlight */}
+      <rect x="0" y="0" width="100" height="100" rx="21" fill={`url(#${G.hl})`}/>
 
-      {/* ── Glass highlight (depth) ── */}
-      <rect x="0" y="0" width="100" height="100" rx="22" fill={`url(#${G.hl})`}/>
+      {/* ───────────────────────────────────────────────────────
+          SPRINTER FIGURE  — full mid-stride pose
+          Proportions: head ≈ ⅛ body height, strong forward lean
 
-      {/* ──────────────────────────────────────────────
-          Bold italic "E" lettermark
-          Skewed -11° (forward lean = motion / speed)
-          White, bold proportions
-          ────────────────────────────────────────── */}
-      <g transform="skewX(-11) translate(6 0)">
-        {/* Vertical stem */}
-        <rect x="16" y="13" width="14" height="74" rx="4" fill="white"/>
-        {/* Top bar */}
-        <rect x="16" y="13" width="52" height="15" rx="4" fill="white"/>
-        {/* Middle bar (slightly shorter — classic E proportion) */}
-        <rect x="16" y="43" width="40" height="14" rx="4" fill="white"/>
-        {/* Bottom bar */}
-        <rect x="16" y="72" width="52" height="15" rx="4" fill="white"/>
+          Landmark coords (100×100 viewBox, 8px padding):
+            head    cx=61  cy=14  r=9
+            torso   (61,23)→(44,58)     ← ~30° forward lean
+            shoulder (53,38)            ← ~40% down torso
+            hip     (44,58)
+
+          Arms (shoulder junction):
+            front arm (R, punching fwd): (53,38)→(79,24)
+            back arm  (L, driving back):  (53,38)→(25,52)
+
+          Legs (hip junction):
+            front leg  (R, stride fwd):  (44,58)→(68,86)
+            back leg   (L, kick high):   (44,58)→(26,34)  ← heel to butt
+          ─────────────────────────────────────────────────── */}
+      <g
+        id={G.fig}
+        stroke="white"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.96"
+      >
+        {/* Head */}
+        <circle cx="61" cy="14" r="9" fill="white" stroke="none"/>
+
+        {/* Torso — strong forward lean */}
+        <line x1="61" y1="23" x2="44" y2="58" strokeWidth="9.5"/>
+
+        {/* Front arm — driving forward + up */}
+        <line x1="53" y1="38" x2="79" y2="24" strokeWidth="8.5"/>
+
+        {/* Back arm — pulling back + down */}
+        <line x1="53" y1="38" x2="25" y2="52" strokeWidth="8.5"/>
+
+        {/* Front leg — long stride forward */}
+        <line x1="44" y1="58" x2="68" y2="86" strokeWidth="9.5"/>
+
+        {/* Back leg — high heel kick (power) */}
+        <line x1="44" y1="58" x2="26" y2="34" strokeWidth="9.5"/>
       </g>
-
-      {/* ──────────────────────────────────────────────
-          Lightning-bolt spark  (top-right corner space)
-          Small, clean, referencing the "IA" energy
-          ────────────────────────────────────────── */}
-      <path
-        d="M 84 12  L 78 26  L 83 26  L 77 40  L 90 24  L 85 24  Z"
-        fill="white"
-        opacity="0.88"
-      />
     </svg>
   );
 }
 
 /* ──────────────────────────────────────────────────────────────
-   AIWordmark  —  icon + gradient text side by side
+   AIWordmark  —  icon + "EntrenaConIA" gradient text
    ────────────────────────────────────────────────────────────── */
 
 export interface AIWordmarkProps {
@@ -148,7 +162,10 @@ export interface AIWordmarkProps {
 export function AIWordmark({ size = 36, animated = false, className = '' }: AIWordmarkProps) {
   const fs = Math.max(12, Math.round(size * 0.48));
   return (
-    <div className={`flex items-center gap-2.5 ${className}`} style={{ flexShrink: 0 }}>
+    <div
+      className={`flex items-center gap-2.5 ${className}`}
+      style={{ flexShrink: 0 }}
+    >
       <AILogo size={size} animated={animated}/>
       <span className="font-bold leading-none whitespace-nowrap" style={{ fontSize: fs }}>
         <span className="text-white">Entrena</span>
