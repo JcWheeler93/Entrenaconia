@@ -34,7 +34,7 @@ export default function RegisterPage() {
   const handleGoogle = async () => {
     setLoading(true);
     await loginWithGoogle();
-    router.push('/dashboard');
+    router.push('/onboarding');
   };
 
   const handleSubmit = async () => {
@@ -42,7 +42,7 @@ export default function RegisterPage() {
     await new Promise(r => setTimeout(r, 1000));
     const { DEMO_USER } = await import('@/lib/data');
     setUser({ ...DEMO_USER, name: form.name || 'Nuevo Usuario', email: form.email, sports: selectedSports.length > 0 ? selectedSports : ['gym'] });
-    router.push('/dashboard');
+    router.push('/onboarding');
   };
 
   return (

@@ -7,7 +7,7 @@ import { useAppStore } from '@/lib/store';
 import { MobileNav } from '@/components/layout/MobileNav';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, _hasHydrated } = useAppStore();
+  const { isAuthenticated, _hasHydrated, onboardingComplete } = useAppStore();
   const router = useRouter();
   const [ready, setReady] = useState(false);
 
@@ -15,10 +15,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (!_hasHydrated) return;
     if (!isAuthenticated) {
       router.replace('/login');
+    } else if (!onboardingComplete) {
+      router.replace('/onboarding');
     } else {
       setReady(true);
     }
-  }, [_hasHydrated, isAuthenticated, router]);
+  }, [_hasHydrated, isAuthenticated, onboardingComplete, router]);
 
   if (!ready) {
     return (

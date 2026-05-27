@@ -6,6 +6,14 @@ import { User, ChatMessage, Workout } from './types';
 
 export type PlanType = 'free' | 'premium' | 'annual';
 
+export interface UserOnboarding {
+  ageRange: string;
+  goal: string;
+  sports: string[];
+  injuries: string[];
+  weeklyTime: string;
+}
+
 interface AppState {
   // Auth
   user: User | null;
@@ -17,6 +25,10 @@ interface AppState {
   workoutsToday: number;
   aiMessagesToday: number;
   lastActiveDate: string;
+
+  // Onboarding
+  onboardingComplete: boolean;
+  userOnboarding: UserOnboarding | null;
 
   // App state
   chatMessages: ChatMessage[];
@@ -40,6 +52,9 @@ interface AppState {
   incrementWorkout: () => void;
   incrementAIMessage: () => void;
   resetDailyCounters: () => void;
+
+  // Actions - onboarding
+  completeOnboarding: (data: UserOnboarding) => void;
 
   // Actions - app
   addChatMessage: (msg: ChatMessage) => void;
@@ -73,6 +88,8 @@ export const useAppStore = create<AppState>()(
       user: null,
       isAuthenticated: false,
       _hasHydrated: false,
+      onboardingComplete: false,
+      userOnboarding: null,
       plan: 'free',
       workoutsToday: 0,
       aiMessagesToday: 0,
@@ -132,6 +149,13 @@ export const useAppStore = create<AppState>()(
         chatMessages: [], plan: 'free',
         workoutsToday: 0, aiMessagesToday: 0,
         dailyGreetingShown: false, lastGreetingDate: '',
+        onboardingComplete: false, userOnboarding: null,
+      }),
+
+      completeOnboarding: (data) => set({
+        onboardingComplete: true,
+        userOnboarding: data,
+        activeSport: data.sports[0] || 'gym',
       }),
 
       setPlan: (plan) => set({ plan, user: get().user ? { ...get().user!, isPremium: plan !== 'free' } : null }),
@@ -224,6 +248,8 @@ export const useAppStore = create<AppState>()(
         aiMessagesToday: state.aiMessagesToday, lastActiveDate: state.lastActiveDate,
         lastGreetingDate: state.lastGreetingDate, notifications: state.notifications,
         dailyGreetingShown: state.dailyGreetingShown,
+        onboardingComplete: state.onboardingComplete,
+        userOnboarding: state.userOnboarding,
       }),
       onRehydrateStorage: () => (state) => { state?.setHasHydrated(true); },
     }

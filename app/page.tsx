@@ -19,11 +19,11 @@ const SPORT_PHOTOS: Record<string, string> = {
   gym:       'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=280&fit=crop&q=80',
   boxing:    'https://images.unsplash.com/photo-1549476464-37392f717541?w=400&h=280&fit=crop&q=80',
   yoga:      'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=400&h=280&fit=crop&q=80',
-  padel:     'https://images.unsplash.com/photo-1617343891688-b3c7c3f07a68?w=400&h=280&fit=crop&q=80',
+  padel:     'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=400&h=280&fit=crop&q=80',
   running:   'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=400&h=280&fit=crop&q=80',
   crossfit:  'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=400&h=280&fit=crop&q=80',
   pilates:   'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=280&fit=crop&q=80',
-  calistenia:'https://images.unsplash.com/photo-1583454155184-870a1f63be9e?w=400&h=280&fit=crop&q=80',
+  calistenia:'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=400&h=280&fit=crop&q=80',
   funcional: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=280&fit=crop&q=80',
   hiit:      'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&h=280&fit=crop&q=80',
   movilidad: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=280&fit=crop&q=80',
@@ -72,7 +72,7 @@ const AGES_SECTIONS = [
     range: '55+',
     title: 'Activos sin límites',
     desc: 'La edad es un número. Planes suaves y efectivos para mantener la movilidad, la fuerza y la calidad de vida.',
-    photo: 'https://images.unsplash.com/photo-1567013127542-490d757e51cd?w=500&h=360&fit=crop&q=80',
+    photo: 'https://images.unsplash.com/photo-1510894347150-7f06c773af55?w=500&h=360&fit=crop&q=80',
     alt: 'Persona mayor haciendo ejercicio',
     tags: ['Movilidad', 'Yoga', 'Caminata', 'Equilibrio'],
     color: '#fdcb6e',
@@ -80,11 +80,11 @@ const AGES_SECTIONS = [
 ];
 
 const PHOTO_STRIP = [
-  'https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?w=300&h=220&fit=crop&q=75',
-  'https://images.unsplash.com/photo-1517438476336-10648eddb8e4?w=300&h=220&fit=crop&q=75',
-  'https://images.unsplash.com/photo-1576678927484-cc907957088c?w=300&h=220&fit=crop&q=75',
-  'https://images.unsplash.com/photo-1583454155184-870a1f63be9e?w=300&h=220&fit=crop&q=75',
-  'https://images.unsplash.com/photo-1595078475328-1400292397ae?w=300&h=220&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=300&h=220&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=300&h=220&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=300&h=220&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=300&h=220&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=300&h=220&fit=crop&q=75',
   'https://images.unsplash.com/photo-1549476464-37392f717541?w=300&h=220&fit=crop&q=75',
 ];
 
@@ -478,13 +478,13 @@ export default function LandingPage() {
               className="grid grid-cols-2 gap-3"
             >
               <div className="relative h-56 rounded-2xl overflow-hidden">
-                <Image src="https://images.unsplash.com/photo-1517438476336-10648eddb8e4?w=400&h=320&fit=crop&q=80" alt="Entrenamiento en casa" fill className="object-cover" />
+                <Image src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=320&fit=crop&q=80" alt="Entrenamiento en casa" fill className="object-cover" />
               </div>
               <div className="relative h-56 rounded-2xl overflow-hidden mt-6">
-                <Image src="https://images.unsplash.com/photo-1576678927484-cc907957088c?w=400&h=320&fit=crop&q=80" alt="Fitness en casa" fill className="object-cover" />
+                <Image src="https://images.unsplash.com/photo-1549476464-37392f717541?w=400&h=320&fit=crop&q=80" alt="Fitness en casa" fill className="object-cover" />
               </div>
               <div className="relative h-48 rounded-2xl overflow-hidden">
-                <Image src="https://images.unsplash.com/photo-1595078475328-1400292397ae?w=400&h=280&fit=crop&q=80" alt="Yoga en casa" fill className="object-cover" />
+                <Image src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&h=280&fit=crop&q=80" alt="Yoga en casa" fill className="object-cover" />
               </div>
               <div className="relative h-48 rounded-2xl overflow-hidden mt-3">
                 <Image src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=280&fit=crop&q=80" alt="Pilates en casa" fill className="object-cover" />
