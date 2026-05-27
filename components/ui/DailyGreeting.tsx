@@ -2,7 +2,8 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { X, Zap, TrendingUp, Target } from 'lucide-react';
+import { X, TrendingUp, Target } from 'lucide-react';
+import { AILogo } from './AILogo';
 import { useAppStore } from '@/lib/store';
 
 const GREETINGS = [
@@ -103,12 +104,12 @@ export function DailyGreeting() {
                 <motion.div
                   animate={{ rotate: [0, -5, 5, -3, 0] }}
                   transition={{ duration: 0.8, delay: 0.5 }}
-                  className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#6c5ce7] to-[#00d2ff] flex items-center justify-center flex-shrink-0"
+                  className="flex-shrink-0"
                 >
-                  <Zap size={20} className="text-white" />
+                  <AILogo size={48} animated />
                 </motion.div>
                 <div>
-                  <p className="text-white/40 text-xs mb-0.5">Tu IA Entrenadora</p>
+                  <p className="text-white/40 text-xs mb-0.5">NOVA · Tu IA Entrenadora</p>
                   <h3 className="text-white font-black text-lg leading-tight">
                     {GREETINGS[greetingIndex]}
                   </h3>

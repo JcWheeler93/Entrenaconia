@@ -3,8 +3,9 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Menu, X, Zap } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Button } from '../ui/Button';
+import { AIWordmark } from '../ui/AILogo';
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -26,14 +27,8 @@ export function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6c5ce7] to-[#00d2ff] flex items-center justify-center">
-              <Zap size={16} className="text-white" />
-            </div>
-            <span className="font-bold text-lg">
-              <span className="text-white">Entrena</span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6c5ce7] to-[#00d2ff]">ConIA</span>
-            </span>
+          <Link href="/">
+            <AIWordmark size={32} />
           </Link>
 
           <div className="hidden md:flex items-center gap-6">

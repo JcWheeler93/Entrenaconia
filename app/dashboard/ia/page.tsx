@@ -2,7 +2,8 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
-import { Send, Zap, RefreshCw, Sparkles, Lock } from 'lucide-react';
+import { Send, Zap, RefreshCw, Lock } from 'lucide-react';
+import { AILogo } from '@/components/ui/AILogo';
 import { useAppStore } from '@/lib/store';
 import { ChatMessage } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
@@ -157,15 +158,15 @@ export default function IAPage() {
       {/* Header */}
       <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#2a2a3e] bg-[#0d0d14] flex-shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#6c5ce7] to-[#00d2ff] flex items-center justify-center">
-            <span className="text-xl">🤖</span>
+          <div className="relative flex-shrink-0">
+            <AILogo size={42} animated showGlow />
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#0d0d14]" />
           </div>
           <div>
             <h1 className="font-bold text-white flex items-center gap-2">
-              IA Entrenadora
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              NOVA — IA Entrenadora
             </h1>
-            <p className="text-white/40 text-xs">Potenciado por GPT-4 · Disponible 24/7</p>
+            <p className="text-white/40 text-xs">Potenciada por GPT-4 · Disponible 24/7</p>
           </div>
         </div>
         <button onClick={clearChat} className="p-2 rounded-lg text-white/40 hover:text-white hover:bg-[#1e1e2e] transition-all" title="Limpiar chat">
@@ -201,8 +202,8 @@ export default function IAPage() {
               className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} gap-3`}
             >
               {msg.role === 'assistant' && (
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#6c5ce7] to-[#00d2ff] flex items-center justify-center flex-shrink-0 mt-1">
-                  <Zap size={14} className="text-white" />
+                <div className="flex-shrink-0 mt-1">
+                  <AILogo size={32} />
                 </div>
               )}
 
@@ -240,9 +241,7 @@ export default function IAPage() {
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center gap-3"
           >
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#6c5ce7] to-[#00d2ff] flex items-center justify-center">
-              <Zap size={14} className="text-white" />
-            </div>
+            <AILogo size={32} animated />
             <div className="bg-[#12121a] border border-[#2a2a3e] rounded-2xl rounded-tl-sm px-4 py-3">
               <div className="flex gap-1.5 items-center">
                 {[0, 1, 2].map((i) => (

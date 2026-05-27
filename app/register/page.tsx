@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Zap, Mail, Lock, User, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import { AIWordmark } from '@/components/ui/AILogo';
 import { Button } from '@/components/ui/Button';
 import { useAppStore } from '@/lib/store';
 import { SPORTS } from '@/lib/data';
@@ -52,12 +53,9 @@ export default function RegisterPage() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md"
       >
-        <div className="flex items-center gap-2 mb-10 justify-center">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6c5ce7] to-[#00d2ff] flex items-center justify-center">
-              <Zap size={15} className="text-white" />
-            </div>
-            <span className="font-bold text-white">EntrenaConIA</span>
+        <div className="flex justify-center mb-10">
+          <Link href="/">
+            <AIWordmark size={34} />
           </Link>
         </div>
 

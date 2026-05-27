@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { CheckCircle, Zap, Brain, Shield, ChevronRight, ArrowLeft, Sparkles } from 'lucide-react';
+import { CheckCircle, Shield, ChevronRight, ArrowLeft, Sparkles } from 'lucide-react';
+import { AILogo, AIWordmark } from '@/components/ui/AILogo';
 import { useAppStore } from '@/lib/store';
 import { Button } from '@/components/ui/Button';
 
@@ -130,7 +131,7 @@ export default function OnboardingPage() {
   }, [_hasHydrated, isAuthenticated, onboardingComplete, router]);
 
   // Typing intro text
-  const introText = `¡Hola${user?.name ? `, ${user.name.split(' ')[0]}` : ''}! 👋 Soy tu entrenadora personal con IA. En menos de un minuto voy a crear un plan de entrenamiento 100% personalizado para ti. Solo necesito conocerte un poco mejor. ¿Empezamos?`;
+  const introText = `¡Hola${user?.name ? `, ${user.name.split(' ')[0]}` : ''}! 👋 Soy NOVA, tu entrenadora personal con IA. En menos de un minuto voy a crear un plan de entrenamiento 100% personalizado para ti, basado en tu edad, objetivos y deportes favoritos. ¿Empezamos?`;
   const { displayed: typedText, done: typingDone } = useTypingEffect(
     step === 0 ? introText : '',
     25
@@ -194,18 +195,16 @@ export default function OnboardingPage() {
           animate={{ opacity: 1, scale: 1 }}
           className="text-center max-w-sm"
         >
-          <div className="relative w-24 h-24 mx-auto mb-8">
+          <div className="relative w-28 h-28 mx-auto mb-8">
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-              className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#6c5ce7] border-r-[#00d2ff]"
+              className="absolute -inset-3 rounded-full border-4 border-transparent border-t-[#6c5ce7] border-r-[#00d2ff]"
             />
-            <div className="absolute inset-3 rounded-full bg-gradient-to-br from-[#6c5ce7] to-[#00d2ff] flex items-center justify-center">
-              <Brain size={28} className="text-white" />
-            </div>
+            <AILogo size={112} animated showGlow />
           </div>
 
-          <h2 className="text-2xl font-black text-white mb-3">Creando tu plan</h2>
+          <h2 className="text-2xl font-black text-white mb-3">NOVA está creando tu plan</h2>
 
           <AnimatePresence mode="wait">
             <motion.p
@@ -245,14 +244,22 @@ export default function OnboardingPage() {
           transition={{ type: 'spring', damping: 18 }}
           className="max-w-md w-full text-center"
         >
-          {/* Confetti-like sparkle */}
+          {/* NOVA celebration */}
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', delay: 0.1 }}
-            className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#6c5ce7] to-[#00d2ff] flex items-center justify-center shadow-2xl shadow-[#6c5ce7]/40"
+            className="relative w-28 h-28 mx-auto mb-6"
           >
-            <Sparkles size={36} className="text-white" />
+            <AILogo size={112} animated showGlow />
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', delay: 0.5 }}
+              className="absolute -top-2 -right-2 w-9 h-9 rounded-full bg-emerald-400 border-2 border-[#0a0a0f] flex items-center justify-center"
+            >
+              <Sparkles size={16} className="text-white" />
+            </motion.div>
           </motion.div>
 
           <motion.h2
@@ -331,12 +338,7 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0f] flex flex-col items-center justify-center px-4 py-10">
       {/* Logo */}
-      <div className="flex items-center gap-2 mb-8">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6c5ce7] to-[#00d2ff] flex items-center justify-center">
-          <Zap size={15} className="text-white" />
-        </div>
-        <span className="font-bold text-white text-lg">EntrenaConIA</span>
-      </div>
+      <AIWordmark size={32} className="mb-8" />
 
       {/* Step dots */}
       {step > 0 && <StepDots current={step - 1} total={TOTAL_STEPS - 1} />}
@@ -352,23 +354,23 @@ export default function OnboardingPage() {
               exit={{ opacity: 0, y: -20 }}
               className="text-center"
             >
-              {/* AI Avatar */}
+              {/* AI Avatar — NOVA */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: 'spring', damping: 14, delay: 0.1 }}
-                className="w-24 h-24 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-[#6c5ce7] to-[#00d2ff] flex items-center justify-center shadow-2xl shadow-[#6c5ce7]/40 relative"
+                className="relative w-28 h-28 mx-auto mb-6"
               >
-                <Brain size={44} className="text-white" />
+                <AILogo size={112} animated showGlow />
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-emerald-400 border-2 border-[#0a0a0f]"
+                  className="absolute top-2 right-2 w-5 h-5 rounded-full bg-emerald-400 border-2 border-[#0a0a0f] z-10"
                 />
               </motion.div>
 
-              <h1 className="text-3xl sm:text-4xl font-black text-white mb-3">Tu entrenadora IA</h1>
-              <p className="text-white/40 text-sm mb-8">100% personalizada · 24/7 disponible</p>
+              <h1 className="text-3xl sm:text-4xl font-black text-white mb-1">Hola, soy NOVA ✨</h1>
+              <p className="text-white/40 text-sm mb-8">Tu entrenadora IA · 100% personalizada · 24/7</p>
 
               {/* Chat bubble with typing */}
               <motion.div
@@ -398,8 +400,8 @@ export default function OnboardingPage() {
               >
                 {[
                   { icon: Shield, text: 'Datos privados y seguros', color: '#00b894' },
-                  { icon: Brain, text: 'Plan único para ti', color: '#6c5ce7' },
-                  { icon: Zap, text: 'Resultados reales', color: '#fdcb6e' },
+                  { icon: CheckCircle, text: 'Plan único para ti', color: '#6c5ce7' },
+                  { icon: ChevronRight, text: 'Resultados reales', color: '#fdcb6e' },
                 ].map(({ icon: Icon, text, color }) => (
                   <div key={text} className="flex items-center gap-1.5 text-xs text-white/50 bg-white/5 rounded-full px-3 py-1.5 border border-white/10">
                     <Icon size={12} style={{ color }} />

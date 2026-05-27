@@ -4,8 +4,9 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Zap, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { AIWordmark } from '@/components/ui/AILogo';
 import { useAppStore } from '@/lib/store';
 
 export default function LoginPage() {
@@ -84,11 +85,8 @@ export default function LoginPage() {
           <div className="absolute bottom-1/3 right-1/3 w-48 h-48 rounded-full opacity-15" style={{ background: 'radial-gradient(circle, #00d2ff, transparent)', filter: 'blur(80px)' }} />
         </div>
         <div className="relative z-10 flex flex-col justify-center px-12">
-          <Link href="/" className="flex items-center gap-2 mb-16">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#6c5ce7] to-[#00d2ff] flex items-center justify-center">
-              <Zap size={18} className="text-white" />
-            </div>
-            <span className="font-black text-xl text-white">EntrenaConIA</span>
+          <Link href="/" className="mb-16 inline-block">
+            <AIWordmark size={38} />
           </Link>
           <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <h1 className="text-5xl font-black text-white mb-6 leading-tight">Bienvenido<br />de vuelta 💪</h1>
@@ -115,11 +113,8 @@ export default function LoginPage() {
       {/* Right form panel */}
       <div className="flex-1 flex items-center justify-center px-4 py-12">
         <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} className="w-full max-w-md">
-          <div className="lg:hidden flex items-center gap-2 mb-10 justify-center">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6c5ce7] to-[#00d2ff] flex items-center justify-center">
-              <Zap size={15} className="text-white" />
-            </div>
-            <span className="font-bold text-white">EntrenaConIA</span>
+          <div className="lg:hidden flex justify-center mb-10">
+            <AIWordmark size={34} />
           </div>
 
           <h2 className="text-3xl font-black text-white mb-2">Iniciar sesión</h2>

@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   Home, Dumbbell, Trophy, Target, MessageSquare,
-  TrendingUp, User, Settings, Zap, LogOut, CreditCard, Swords,
+  TrendingUp, User, Settings, LogOut, CreditCard, Swords,
 } from 'lucide-react';
+import { AIWordmark } from '../ui/AILogo';
 import { useAppStore } from '@/lib/store';
 import { ProgressBar } from '../ui/ProgressBar';
 
@@ -39,14 +40,10 @@ export function Sidebar() {
       className="fixed left-0 top-0 h-screen w-64 flex flex-col border-r border-[#2a2a3e] bg-[#0d0d14] z-40 hidden lg:flex"
     >
       {/* Logo */}
-      <div className="flex items-center gap-2 px-6 py-5 border-b border-[#2a2a3e]">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6c5ce7] to-[#00d2ff] flex items-center justify-center">
-          <Zap size={16} className="text-white" />
-        </div>
-        <span className="font-bold text-lg">
-          <span className="text-white">Entrena</span>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6c5ce7] to-[#00d2ff]">ConIA</span>
-        </span>
+      <div className="flex items-center px-6 py-5 border-b border-[#2a2a3e]">
+        <Link href="/dashboard">
+          <AIWordmark size={34} />
+        </Link>
       </div>
 
       {/* User Level */}
