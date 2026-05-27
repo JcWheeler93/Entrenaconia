@@ -3,27 +3,29 @@
 import { useId } from 'react';
 
 /*  ──────────────────────────────────────────────────────────────────
-    EntrenaConIA — brand mark
+    EntrenaConIA — brand mark  (NOVA dumbbell mascot)
 
-    Concept: diagonal dumbbell — the universal gym symbol, rendered
-    with metallic depth (collar + plates + bar highlights) and a
-    continuous purple→cyan gradient along its length.
+    Concept: a friendly dumbbell CHARACTER — the dumbbell IS the mascot.
+    Big eyes on the central bar, rosy cheeks, warm smile.
+    Same spirit as Duolingo's owl but gym-native.
 
-    Design anatomy (100×100 viewBox, group rotated −38°)
-    ──────────────────────────────────────────────────────
-    Unrotated layout (all centred around y=50):
-      Left plate:    x=8..27   y=33..67  rx=5  h=34
-      Left collar:   x=27..35  y=41..59  rx=3  h=18
-      Bar:           x=35..65  y=44..56  rx=4  h=12
-      Right collar:  x=65..73  y=41..59  rx=3
-      Right plate:   x=73..92  y=33..67  rx=5
+    Layout (100×100 viewBox, all horizontal)
+    ──────────────────────────────────────────
+    Left plate:    x=5..26   y=24..76  rx=7
+    Left collar:   x=26..34  y=32..68  rx=3
+    Bar (face):    x=34..66  y=35..65  rx=9
+    Right collar:  x=66..74  y=32..68  rx=3
+    Right plate:   x=74..95  y=24..76  rx=7
 
-    Highlights: white overlay at 18-22% opacity on the top third of
-    each element → simulates cylindrical metallic surface.
+    Eyes on bar:
+      Left  iris  cx=43 cy=46 r=7  |  pupil cx=44.5 cy=47.5 r=3.5
+      Right iris  cx=57 cy=46 r=7  |  pupil cx=58.5 cy=47.5 r=3.5
+      Shine: upper-right of each pupil
 
-    Gradient: userSpaceOnUse x=8→92 y=50 (horizontal in local space),
-    so after −38° rotation the colour flows purple (left plate) →
-    cyan (right plate) along the dumbbell axis.
+    Cheek blush: circles at cx=37/63 cy=57 r=5 (pink tint)
+    Smile: M 42 57 Q 50 64 58 57
+
+    Animation: eyes blink every 3.5 s (staggered 60 ms)
     ────────────────────────────────────────────────────────────────── */
 
 export interface AILogoProps {
@@ -46,7 +48,8 @@ export function AILogo({
     grad: `ecg${u}`,
     hl:   `ech${u}`,
     gf:   `ecs${u}`,
-    dm:   `ecdm${u}`,
+    el:   `ecel${u}`,
+    er:   `ecer${u}`,
   };
 
   return (
@@ -60,38 +63,41 @@ export function AILogo({
       style={{ flexShrink: 0, display: 'block' }}
       aria-label="EntrenaConIA"
     >
-      {/* ── Glow pulse when animated ── */}
+      {/* ── Blink animation ── */}
       {animated && (
         <style>{`
-          @keyframes dbpulse${u}{
-            0%,100%{ filter:drop-shadow(0 0 3px #6c5ce788) }
-            50%    { filter:drop-shadow(0 0 9px #00d2ffaa) }
+          @keyframes blink${u}{
+            0%,84%,100%{ transform:scaleY(1)   }
+            89%        { transform:scaleY(0.07) }
+            93%        { transform:scaleY(1)    }
           }
-          #${ids.dm}{ animation:dbpulse${u} 2.2s ease-in-out infinite }
+          #${ids.el},#${ids.er}{
+            transform-box:fill-box;
+            transform-origin:center center;
+            animation:blink${u} 3.5s ease-in-out infinite;
+          }
+          #${ids.er}{ animation-delay:.06s }
         `}</style>
       )}
 
       <defs>
-        {/* Gradient runs left→right in the dumbbell's local space.
-            Because the group is rotated −38°, the gradient also
-            reads as diagonal in screen space — purple left, cyan right. */}
+        {/* Gradient left (purple) → right (cyan) across the whole dumbbell */}
         <linearGradient
           id={ids.grad}
-          x1="8" y1="50" x2="92" y2="50"
+          x1="5" y1="50" x2="95" y2="50"
           gradientUnits="userSpaceOnUse"
         >
           <stop offset="0%"   stopColor="#6c5ce7"/>
-          <stop offset="55%"  stopColor="#a78bfa"/>
+          <stop offset="48%"  stopColor="#a78bfa"/>
           <stop offset="100%" stopColor="#00d2ff"/>
         </linearGradient>
 
         {/* Container glass sheen */}
         <radialGradient id={ids.hl} cx="30%" cy="22%" r="55%">
-          <stop offset="0%"   stopColor="white" stopOpacity="0.13"/>
+          <stop offset="0%"   stopColor="white" stopOpacity="0.12"/>
           <stop offset="100%" stopColor="white" stopOpacity="0"/>
         </radialGradient>
 
-        {/* Outer glow filter */}
         {showGlow && (
           <filter id={ids.gf} x="-45%" y="-45%" width="190%" height="190%">
             <feGaussianBlur stdDeviation="7" result="b"/>
@@ -103,55 +109,68 @@ export function AILogo({
         )}
       </defs>
 
-      {/* Outer halo */}
       {showGlow && (
         <rect
           x="-3" y="-3" width="106" height="106" rx="24"
-          fill={`url(#${ids.grad})`}
-          opacity="0.28"
+          fill={`url(#${ids.grad})`} opacity="0.28"
           filter={`url(#${ids.gf})`}
         />
       )}
 
-      {/* ── Container ── */}
-      <rect x="0" y="0" width="100" height="100" rx="20" fill="#0c0c14"/>
-      <rect x="0" y="0" width="100" height="100" rx="20" fill={`url(#${ids.hl})`}/>
-      <rect
-        x="0.75" y="0.75" width="98.5" height="98.5" rx="19.5"
-        stroke="white" strokeOpacity="0.07" strokeWidth="1.5" fill="none"
-      />
+      {/* ── Dark container ── */}
+      <rect x="0" y="0" width="100" height="100" rx="22" fill="#0c0c14"/>
+      <rect x="0" y="0" width="100" height="100" rx="22" fill={`url(#${ids.hl})`}/>
+      <rect x="0.75" y="0.75" width="98.5" height="98.5" rx="21.5"
+        stroke="white" strokeOpacity="0.07" strokeWidth="1.5" fill="none"/>
 
-      {/* ── Dumbbell — rotated −38° around centre ── */}
-      <g id={ids.dm} transform="rotate(-38 50 50)">
+      {/* ──────── LEFT PLATE ──────── */}
+      <rect x="5"  y="24" width="21" height="52" rx="7" fill={`url(#${ids.grad})`}/>
+      {/* top shine */}
+      <rect x="5"  y="24" width="21" height="16" rx="7" fill="white" fillOpacity="0.22"/>
+      {/* bottom shadow */}
+      <rect x="5"  y="60" width="21" height="16" rx="7" fill="black" fillOpacity="0.15"/>
 
-        {/* ──── Left plate ──── */}
-        <rect x="8"  y="33" width="19" height="34" rx="5" fill={`url(#${ids.grad})`}/>
-        {/* plate top highlight (metallic sheen) */}
-        <rect x="8"  y="33" width="19" height="11" rx="5" fill="white" fillOpacity="0.22"/>
-        {/* plate bottom edge shadow */}
-        <rect x="8"  y="56" width="19" height="11" rx="5" fill="black" fillOpacity="0.18"/>
+      {/* ──────── LEFT COLLAR ──────── */}
+      <rect x="26" y="32" width="8"  height="36" rx="3" fill={`url(#${ids.grad})`}/>
+      <rect x="26" y="32" width="8"  height="11" rx="3" fill="white" fillOpacity="0.20"/>
 
-        {/* ──── Left collar ──── */}
-        <rect x="27" y="41" width="8"  height="18" rx="3" fill={`url(#${ids.grad})`}/>
-        <rect x="27" y="41" width="8"  height="6"  rx="3" fill="white" fillOpacity="0.20"/>
+      {/* ──────── BAR — face lives here ──────── */}
+      <rect x="34" y="35" width="32" height="30" rx="9" fill={`url(#${ids.grad})`}/>
+      {/* bar top shine */}
+      <rect x="34" y="35" width="32" height="10" rx="9" fill="white" fillOpacity="0.20"/>
 
-        {/* ──── Bar ──── */}
-        <rect x="35" y="44" width="30" height="12" rx="4" fill={`url(#${ids.grad})`}/>
-        {/* bar top highlight — knurling shimmer */}
-        <rect x="35" y="44" width="30" height="4"  rx="2" fill="white" fillOpacity="0.18"/>
-        {/* bar bottom shadow */}
-        <rect x="35" y="52" width="30" height="4"  rx="2" fill="black" fillOpacity="0.15"/>
+      {/* ──────── RIGHT COLLAR ──────── */}
+      <rect x="66" y="32" width="8"  height="36" rx="3" fill={`url(#${ids.grad})`}/>
+      <rect x="66" y="32" width="8"  height="11" rx="3" fill="white" fillOpacity="0.20"/>
 
-        {/* ──── Right collar ──── */}
-        <rect x="65" y="41" width="8"  height="18" rx="3" fill={`url(#${ids.grad})`}/>
-        <rect x="65" y="41" width="8"  height="6"  rx="3" fill="white" fillOpacity="0.20"/>
+      {/* ──────── RIGHT PLATE ──────── */}
+      <rect x="74" y="24" width="21" height="52" rx="7" fill={`url(#${ids.grad})`}/>
+      <rect x="74" y="24" width="21" height="16" rx="7" fill="white" fillOpacity="0.22"/>
+      <rect x="74" y="60" width="21" height="16" rx="7" fill="black" fillOpacity="0.15"/>
 
-        {/* ──── Right plate ──── */}
-        <rect x="73" y="33" width="19" height="34" rx="5" fill={`url(#${ids.grad})`}/>
-        <rect x="73" y="33" width="19" height="11" rx="5" fill="white" fillOpacity="0.22"/>
-        <rect x="73" y="56" width="19" height="11" rx="5" fill="black" fillOpacity="0.18"/>
+      {/* ──────── CHEEK BLUSH ──────── */}
+      <circle cx="37" cy="57" r="5.5" fill="#fd79a8" fillOpacity="0.38"/>
+      <circle cx="63" cy="57" r="5.5" fill="#fd79a8" fillOpacity="0.38"/>
 
+      {/* ──────── LEFT EYE ──────── */}
+      <g id={ids.el}>
+        <circle cx="43"  cy="46"  r="7"   fill="white"/>
+        <circle cx="44.5" cy="47.5" r="3.5" fill="#0c0c14"/>
+        <circle cx="47"  cy="44.5" r="2"   fill="white"/>
       </g>
+
+      {/* ──────── RIGHT EYE ──────── */}
+      <g id={ids.er}>
+        <circle cx="57"  cy="46"  r="7"   fill="white"/>
+        <circle cx="58.5" cy="47.5" r="3.5" fill="#0c0c14"/>
+        <circle cx="61"  cy="44.5" r="2"   fill="white"/>
+      </g>
+
+      {/* ──────── SMILE ──────── */}
+      <path
+        d="M 42 57 Q 50 65 58 57"
+        stroke="white" strokeWidth="2.8" fill="none" strokeLinecap="round"
+      />
     </svg>
   );
 }
