@@ -2,19 +2,33 @@
 
 import { useId } from 'react';
 
-/*  ──────────────────────────────────────────────────────────────
+/*  ──────────────────────────────────────────────────────────────────
     EntrenaConIA — brand mark
 
-    Design: geometric sprinter figure in full stride
-    ● Head (circle) + torso (forward lean ~30°) + 4 limbs
-    ● Bold rounded strokes — athletic, confident
-    ● Gradient rounded-square container  #6c5ce7 → #00d2ff
-    ● Glass highlight layer for premium depth
-    ● Animated: subtle breathing pulse on the figure
+    Concept: three ascending signal bars with a continuous diagonal
+    gradient flowing purple→cyan across all three columns.
 
-    Reference: Strava / RunKeeper style but fully custom geometry.
-    Works at 16 px favicon → 256 px display.
-    ────────────────────────────────────────────────────────────── */
+    Design rationale
+    ─────────────────
+    ● Three bars climbing left→right = progress, improvement, levels
+    ● Gradient flows across the trio (not bar-by-bar) = unity, one brand
+    ● Dark container (#0c0c14) = premium, high-contrast
+    ● Round-top bars (rx = half-width) = friendly, not too corporate
+    ● When animated: bars bounce like an audio equaliser = AI "listening"
+
+    Proportions (100×100 viewBox, 10px edge padding)
+    ─────────────────────────────────────────────────
+    Bar width: 17px  |  gap: 10px  |  total span: 17+10+17+10+17 = 71px
+    Left edge: 14px  |  Right edge: 14+71 = 85px  (centred, ±0.5px rounding)
+    Bar heights: 22 / 44 / 68   (≈ 1 : 2 : 3.09 ratio)
+    Bottom align: y = 84
+
+    Bar 1:  x=14, y=62, w=17, h=22   (purple)
+    Bar 2:  x=41, y=40, w=17, h=44   (violet)
+    Bar 3:  x=68, y=16, w=17, h=68   (cyan)
+
+    Gradient: horizontal, spans x=14→x=85 in userSpace
+    ────────────────────────────────────────────────────────────────── */
 
 export interface AILogoProps {
   size?: number;
@@ -30,13 +44,15 @@ export function AILogo({
   className = '',
 }: AILogoProps) {
   const raw = useId();
-  const u = raw.replace(/[^a-z0-9]/gi, '');
+  const u   = raw.replace(/[^a-z0-9]/gi, '');
 
-  const G = {
-    bg:   `ecbg${u}`,
-    hl:   `echl${u}`,
-    sh:   `ecsh${u}`,
-    fig:  `ecfg${u}`,
+  const ids = {
+    grad: `ecg${u}`,
+    hl:   `ech${u}`,
+    gf:   `ecs${u}`,
+    b1:   `ecb1${u}`,
+    b2:   `ecb2${u}`,
+    b3:   `ecb3${u}`,
   };
 
   return (
@@ -50,37 +66,43 @@ export function AILogo({
       style={{ flexShrink: 0, display: 'block' }}
       aria-label="EntrenaConIA"
     >
-      {/* ── Keyframes (only when animated) ── */}
+      {/* ── Equaliser animation ── */}
       {animated && (
         <style>{`
-          @keyframes ecpulse${u} {
-            0%,100% { transform:scale(1); }
-            50%      { transform:scale(.95); }
+          @keyframes eq${u}{
+            0%,100%{transform:scaleY(1)}
+            50%    {transform:scaleY(1.22)}
           }
-          #${G.fig} {
-            animation: ecpulse${u} 1.9s ease-in-out infinite;
-            transform-origin: 50px 52px;
-            transform-box: fill-box;
+          #${ids.b1},#${ids.b2},#${ids.b3}{
+            transform-box:fill-box;
+            transform-origin:center bottom;
           }
+          #${ids.b1}{animation:eq${u} 1.25s ease-in-out infinite}
+          #${ids.b2}{animation:eq${u} 1.25s ease-in-out .22s infinite}
+          #${ids.b3}{animation:eq${u} 1.25s ease-in-out .44s infinite}
         `}</style>
       )}
 
       <defs>
-        {/* Main brand gradient */}
-        <linearGradient id={G.bg} x1="4" y1="4" x2="96" y2="96" gradientUnits="userSpaceOnUse">
+        {/* Horizontal gradient spanning all 3 bars */}
+        <linearGradient
+          id={ids.grad}
+          x1="14" y1="0" x2="85" y2="0"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop offset="0%"   stopColor="#6c5ce7"/>
           <stop offset="100%" stopColor="#00d2ff"/>
         </linearGradient>
 
-        {/* Top-left glass highlight */}
-        <radialGradient id={G.hl} cx="26%" cy="20%" r="54%">
-          <stop offset="0%"   stopColor="white" stopOpacity="0.26"/>
+        {/* Top-left glass sheen */}
+        <radialGradient id={ids.hl} cx="30%" cy="22%" r="55%">
+          <stop offset="0%"   stopColor="white" stopOpacity="0.13"/>
           <stop offset="100%" stopColor="white" stopOpacity="0"/>
         </radialGradient>
 
-        {/* Outer glow filter (only when showGlow) */}
+        {/* Outer glow filter */}
         {showGlow && (
-          <filter id={G.sh} x="-40%" y="-40%" width="180%" height="180%">
+          <filter id={ids.gf} x="-45%" y="-45%" width="190%" height="190%">
             <feGaussianBlur stdDeviation="7" result="b"/>
             <feMerge>
               <feMergeNode in="b"/>
@@ -92,66 +114,54 @@ export function AILogo({
 
       {/* Outer halo */}
       {showGlow && (
-        <rect x="-2" y="-2" width="104" height="104" rx="24"
-          fill={`url(#${G.bg})`} opacity="0.28"
-          filter={`url(#${G.sh})`}/>
+        <rect
+          x="-3" y="-3" width="106" height="106" rx="24"
+          fill={`url(#${ids.grad})`}
+          opacity="0.28"
+          filter={`url(#${ids.gf})`}
+        />
       )}
 
-      {/* ── Background: gradient rounded square ── */}
-      <rect x="0" y="0" width="100" height="100" rx="21" fill={`url(#${G.bg})`}/>
-      {/* Glass depth highlight */}
-      <rect x="0" y="0" width="100" height="100" rx="21" fill={`url(#${G.hl})`}/>
+      {/* ── Container: near-black rounded square ── */}
+      <rect x="0" y="0" width="100" height="100" rx="20" fill="#0c0c14"/>
+      {/* Glass sheen */}
+      <rect x="0" y="0" width="100" height="100" rx="20" fill={`url(#${ids.hl})`}/>
+      {/* Subtle inner edge */}
+      <rect
+        x="0.75" y="0.75" width="98.5" height="98.5" rx="19.5"
+        stroke="white" strokeOpacity="0.06" strokeWidth="1.5" fill="none"
+      />
 
-      {/* ───────────────────────────────────────────────────────
-          SPRINTER FIGURE  — full mid-stride pose
-          Proportions: head ≈ ⅛ body height, strong forward lean
+      {/* ── Bar 1 — left, shortest (purple zone) ── */}
+      <rect
+        id={ids.b1}
+        x="14" y="62" width="17" height="22"
+        rx="8.5"
+        fill={`url(#${ids.grad})`}
+      />
 
-          Landmark coords (100×100 viewBox, 8px padding):
-            head    cx=61  cy=14  r=9
-            torso   (61,23)→(44,58)     ← ~30° forward lean
-            shoulder (53,38)            ← ~40% down torso
-            hip     (44,58)
+      {/* ── Bar 2 — centre, medium (violet zone) ── */}
+      <rect
+        id={ids.b2}
+        x="41" y="40" width="17" height="44"
+        rx="8.5"
+        fill={`url(#${ids.grad})`}
+      />
 
-          Arms (shoulder junction):
-            front arm (R, punching fwd): (53,38)→(79,24)
-            back arm  (L, driving back):  (53,38)→(25,52)
-
-          Legs (hip junction):
-            front leg  (R, stride fwd):  (44,58)→(68,86)
-            back leg   (L, kick high):   (44,58)→(26,34)  ← heel to butt
-          ─────────────────────────────────────────────────── */}
-      <g
-        id={G.fig}
-        stroke="white"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        opacity="0.96"
-      >
-        {/* Head */}
-        <circle cx="61" cy="14" r="9" fill="white" stroke="none"/>
-
-        {/* Torso — strong forward lean */}
-        <line x1="61" y1="23" x2="44" y2="58" strokeWidth="9.5"/>
-
-        {/* Front arm — driving forward + up */}
-        <line x1="53" y1="38" x2="79" y2="24" strokeWidth="8.5"/>
-
-        {/* Back arm — pulling back + down */}
-        <line x1="53" y1="38" x2="25" y2="52" strokeWidth="8.5"/>
-
-        {/* Front leg — long stride forward */}
-        <line x1="44" y1="58" x2="68" y2="86" strokeWidth="9.5"/>
-
-        {/* Back leg — high heel kick (power) */}
-        <line x1="44" y1="58" x2="26" y2="34" strokeWidth="9.5"/>
-      </g>
+      {/* ── Bar 3 — right, tallest (cyan zone) ── */}
+      <rect
+        id={ids.b3}
+        x="68" y="16" width="17" height="68"
+        rx="8.5"
+        fill={`url(#${ids.grad})`}
+      />
     </svg>
   );
 }
 
-/* ──────────────────────────────────────────────────────────────
+/* ──────────────────────────────────────────────────────────────────
    AIWordmark  —  icon + "EntrenaConIA" gradient text
-   ────────────────────────────────────────────────────────────── */
+   ────────────────────────────────────────────────────────────────── */
 
 export interface AIWordmarkProps {
   size?: number;
@@ -167,7 +177,10 @@ export function AIWordmark({ size = 36, animated = false, className = '' }: AIWo
       style={{ flexShrink: 0 }}
     >
       <AILogo size={size} animated={animated}/>
-      <span className="font-bold leading-none whitespace-nowrap" style={{ fontSize: fs }}>
+      <span
+        className="font-bold leading-none whitespace-nowrap"
+        style={{ fontSize: fs }}
+      >
         <span className="text-white">Entrena</span>
         <span
           className="text-transparent bg-clip-text"
