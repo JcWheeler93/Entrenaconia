@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { DailyGreeting } from '@/components/ui/DailyGreeting';
 import { DEMO_WORKOUTS, WEEKLY_PROGRESS, SPORTS } from '@/lib/data';
 import Link from 'next/link';
 import {
@@ -22,6 +23,16 @@ const getGreeting = () => {
 export default function DashboardHome() {
   const { user, setCurrentWorkout } = useAppStore();
   if (!user) return null;
+
+  return (
+    <>
+      <DailyGreeting />
+      <DashboardContent user={user} setCurrentWorkout={setCurrentWorkout} />
+    </>
+  );
+}
+
+function DashboardContent({ user, setCurrentWorkout }: { user: NonNullable<ReturnType<typeof useAppStore>['user']>; setCurrentWorkout: (w: any) => void }) {
 
   const todayWorkout = DEMO_WORKOUTS[0];
   const xpPct = Math.round((user.xp / user.xpToNextLevel) * 100);

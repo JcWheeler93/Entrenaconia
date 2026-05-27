@@ -2,10 +2,11 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
-import { Send, Zap, RefreshCw, Sparkles } from 'lucide-react';
+import { Send, Zap, RefreshCw, Sparkles, Lock } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { ChatMessage } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
+import { UpgradeModal } from '@/components/ui/UpgradeModal';
 
 const QUICK_PROMPTS = [
   'Crea mi rutina de hoy',
@@ -63,11 +64,13 @@ function formatMessage(text: string) {
 }
 
 export default function IAPage() {
-  const { user, chatMessages, addChatMessage, clearChat } = useAppStore();
+  const { user, chatMessages, addChatMessage, clearChat, canSendAIMessage, incrementAIMessage, aiMessagesToday, plan } = useAppStore();
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [showUpgrade, setShowUpgrade] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const FREE_LIMIT = 5;
 
   useEffect(() => {
     if (chatMessages.length === 0) {
@@ -86,6 +89,13 @@ export default function IAPage() {
 
   const sendMessage = async (content: string) => {
     if (!content.trim() || isTyping) return;
+
+    if (!canSendAIMessage()) {
+      setShowUpgrade(true);
+      return;
+    }
+
+    incrementAIMessage();
 
     const userMsg: ChatMessage = {
       id: `u_${Date.now()}`,
@@ -118,7 +128,32 @@ export default function IAPage() {
   };
 
   return (
+    <>
+    <UpgradeModal isOpen={showUpgrade} onClose={() => setShowUpgrade(false)} reason="ai" />
     <div className="flex flex-col h-screen lg:h-[100dvh] max-h-screen">
+      {/* Free plan usage bar */}
+      {plan === 'free' && (
+        <div className={`px-4 py-2 text-xs flex items-center gap-2 ${aiMessagesToday >= FREE_LIMIT ? 'bg-red-500/10 border-b border-red-500/20' : 'bg-[#6c5ce7]/5 border-b border-[#2a2a3e]'}`}>
+          {aiMessagesToday >= FREE_LIMIT ? (
+            <>
+              <Lock size={11} className="text-red-400" />
+              <span className="text-red-300 font-medium">Límite de mensajes alcanzado.</span>
+              <button onClick={() => setShowUpgrade(true)} className="text-[#a29bfe] underline">Pasa a Premium →</button>
+            </>
+          ) : (
+            <>
+              <Zap size={11} className="text-[#6c5ce7]" />
+              <span className="text-white/40">{FREE_LIMIT - aiMessagesToday} mensajes restantes hoy</span>
+              <div className="flex gap-0.5 ml-auto">
+                {Array.from({ length: FREE_LIMIT }).map((_, i) => (
+                  <div key={i} className={`w-3 h-1.5 rounded-full ${i < aiMessagesToday ? 'bg-red-500' : 'bg-[#2a2a3e]'}`} />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#2a2a3e] bg-[#0d0d14] flex-shrink-0">
         <div className="flex items-center gap-3">
@@ -145,7 +180,7 @@ export default function IAPage() {
             <button
               key={prompt}
               onClick={() => sendMessage(prompt)}
-              disabled={isTyping}
+              disabled={isTyping || (plan === 'free' && aiMessagesToday >= FREE_LIMIT)}
               className="flex-shrink-0 text-xs px-3 py-1.5 rounded-full border border-[#2a2a3e] text-white/60 hover:text-white hover:border-[#6c5ce7]/50 hover:bg-[#6c5ce7]/10 transition-all disabled:opacity-40"
             >
               {prompt}
@@ -243,7 +278,7 @@ export default function IAPage() {
             />
             <button
               onClick={() => sendMessage(input)}
-              disabled={!input.trim() || isTyping}
+              disabled={!input.trim() || isTyping || (plan === 'free' && aiMessagesToday >= FREE_LIMIT)}
               className="absolute right-3 bottom-3 w-7 h-7 rounded-lg bg-gradient-to-br from-[#6c5ce7] to-[#00d2ff] flex items-center justify-center disabled:opacity-30 transition-all hover:scale-110"
             >
               <Send size={13} className="text-white" />
@@ -256,5 +291,6 @@ export default function IAPage() {
         </p>
       </div>
     </div>
+    </>
   );
 }

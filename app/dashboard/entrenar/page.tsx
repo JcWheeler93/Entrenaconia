@@ -2,11 +2,12 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import { Play, Clock, Flame, Zap, CheckCircle, ChevronDown, Filter, Search } from 'lucide-react';
+import { Play, Clock, Flame, Zap, CheckCircle, ChevronDown, Search, Lock } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { UpgradeModal } from '@/components/ui/UpgradeModal';
 import { DEMO_WORKOUTS, SPORTS } from '@/lib/data';
 import { Workout } from '@/lib/types';
 
@@ -235,11 +236,21 @@ function ActiveWorkout({ workout, onFinish }: { workout: Workout; onFinish: () =
 }
 
 export default function EntrenarPage() {
+  const { canDoWorkout, plan, workoutsToday } = useAppStore();
   const [activeWorkout, setActiveWorkout] = useState<Workout | null>(null);
   const [sportFilter, setSportFilter] = useState('Todos');
   const [diffFilter, setDiffFilter] = useState('Todos');
   const [search, setSearch] = useState('');
   const [finished, setFinished] = useState<string[]>([]);
+  const [showUpgrade, setShowUpgrade] = useState(false);
+
+  const handleStartWorkout = (workout: Workout) => {
+    if (!canDoWorkout()) {
+      setShowUpgrade(true);
+      return;
+    }
+    setActiveWorkout(workout);
+  };
 
   const allWorkouts = [...DEMO_WORKOUTS, ...DEMO_WORKOUTS.map(w => ({
     ...w,
@@ -262,6 +273,8 @@ export default function EntrenarPage() {
 
   return (
     <>
+      <UpgradeModal isOpen={showUpgrade} onClose={() => setShowUpgrade(false)} reason="workout" />
+
       {activeWorkout && (
         <ActiveWorkout
           workout={activeWorkout}
@@ -277,6 +290,43 @@ export default function EntrenarPage() {
           <h1 className="text-3xl font-black text-white mb-2">Entrenar 🏋️</h1>
           <p className="text-white/50">Elige tu entrenamiento o deja que la IA elija por ti</p>
         </motion.div>
+
+        {/* Freemium bar */}
+        {plan === 'free' && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`mb-6 flex items-center gap-3 p-4 rounded-2xl border ${
+              workoutsToday >= 1
+                ? 'bg-red-500/10 border-red-500/20'
+                : 'bg-[#6c5ce7]/10 border-[#6c5ce7]/20'
+            }`}
+          >
+            {workoutsToday >= 1 ? (
+              <>
+                <Lock size={18} className="text-red-400 flex-shrink-0" />
+                <div className="flex-1">
+                  <p className="text-red-300 font-semibold text-sm">Límite diario alcanzado</p>
+                  <p className="text-white/40 text-xs">Has usado tu entrenamiento gratuito de hoy</p>
+                </div>
+                <button onClick={() => setShowUpgrade(true)} className="text-xs px-3 py-1.5 bg-gradient-to-r from-[#6c5ce7] to-[#00d2ff] rounded-lg font-bold text-white hover:opacity-90 flex-shrink-0">
+                  Premium →
+                </button>
+              </>
+            ) : (
+              <>
+                <Zap size={18} className="text-[#6c5ce7] flex-shrink-0" />
+                <div className="flex-1">
+                  <p className="text-white font-semibold text-sm">Plan Gratuito</p>
+                  <p className="text-white/40 text-xs">1 entrenamiento disponible hoy · Pasa a Premium para entrenar sin límites</p>
+                </div>
+                <a href="/dashboard/premium" className="text-xs px-3 py-1.5 bg-[#6c5ce7]/20 border border-[#6c5ce7]/30 rounded-lg font-bold text-[#a29bfe] hover:bg-[#6c5ce7]/30 flex-shrink-0">
+                  Ver Premium
+                </a>
+              </>
+            )}
+          </motion.div>
+        )}
 
         {/* Search & Filters */}
         <div className="mb-6 space-y-3">
@@ -345,7 +395,7 @@ export default function EntrenarPage() {
                   </div>
                 </div>
               ) : (
-                <WorkoutCard workout={workout} onStart={setActiveWorkout} />
+                <WorkoutCard workout={workout} onStart={handleStartWorkout} />
               )}
             </motion.div>
           ))}

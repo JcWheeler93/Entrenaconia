@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   Home, Dumbbell, Trophy, Target, MessageSquare,
-  TrendingUp, User, Settings, Zap, LogOut, CreditCard,
+  TrendingUp, User, Settings, Zap, LogOut, CreditCard, Swords,
 } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { ProgressBar } from '../ui/ProgressBar';
@@ -17,6 +17,7 @@ const navItems = [
   { href: '/dashboard/progreso', icon: TrendingUp, label: 'Mi Progreso' },
   { href: '/dashboard/objetivos', icon: Target, label: 'Objetivos' },
   { href: '/dashboard/logros', icon: Trophy, label: 'Logros' },
+  { href: '/dashboard/ranking', icon: Swords, label: 'Ranking' },
   { href: '/dashboard/padel', icon: '🎾', label: 'Pádel', isEmoji: true },
 ];
 

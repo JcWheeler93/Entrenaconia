@@ -2,14 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Dumbbell, MessageSquare, TrendingUp, Trophy } from 'lucide-react';
+import { Home, Dumbbell, MessageSquare, TrendingUp, Swords } from 'lucide-react';
 
 const items = [
   { href: '/dashboard', icon: Home, label: 'Inicio' },
   { href: '/dashboard/entrenar', icon: Dumbbell, label: 'Entrenar' },
   { href: '/dashboard/ia', icon: MessageSquare, label: 'IA' },
   { href: '/dashboard/progreso', icon: TrendingUp, label: 'Progreso' },
-  { href: '/dashboard/logros', icon: Trophy, label: 'Logros' },
+  { href: '/dashboard/ranking', icon: Swords, label: 'Ranking' },
 ];
 
 export function MobileNav() {
