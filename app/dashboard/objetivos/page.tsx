@@ -57,7 +57,7 @@ export default function ObjetivosPage() {
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h3 className="text-white font-bold text-lg">{goal.title}</h3>
-                    {goal.sport && <Badge variant="default" size="sm" className="mt-1">{goal.sport}</Badge>}
+                    {goal.sport && <span className="mt-1 text-xs px-2 py-0.5 rounded-full bg-[#2a2a3e] text-white/60">{goal.sport}</span>}
                   </div>
                   <div className="text-right">
                     <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#6c5ce7] to-[#00d2ff]">{pct}%</span>
